@@ -8,19 +8,71 @@ body {
 }
 
 .table {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    flex-direction: row;
-    width: 80vw;
-    height: 80vh;
-    background: linear-gradient(90deg, #0B3D2E, #148d69);
-    border: 1.5rem solid #5C4033;
-    border-radius: 45%;
-    padding-bottom: 3vh;
-    box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* centro vertical */
+  flex-direction: row;
+  width: 80vw;
+  height: 80vh;
+  background: linear-gradient(90deg, #0B3D2E, #148d69);
+  border: 1.5rem solid #5C4033;
+  border-radius: 45%;
+  box-sizing: border-box;
+  padding: 2rem;
 }
+
+.tableContent{
+      display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+}
+
+.tableCards{
+      display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 12rem;
+}
+
+.mesa-carta {
+    position: relative;
+  width: 8vw;
+  max-width: 100px;
+  aspect-ratio: 2 / 3;
+  background-color: white;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.player-cards {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+.tableCards .value
+{
+    top: 0.5rem;
+    left: 0.5rem;
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+    
 
 .card1, .card2 {
     position: relative;
@@ -48,6 +100,7 @@ body {
     font-size: 1.6rem;
     font-weight: bold;
 }
+
 .suit {
     position: absolute;
     top: 1rem;
@@ -71,6 +124,11 @@ body {
 .card2:hover {
     box-shadow: 0 0 10px #F1C40F;
     transform: rotate(5deg) scale(1.05);
+}
+
+.mesa-carta:hover{
+    box-shadow: 0 0 10px #F1C40F;
+    scale: 1.05;
 }
 
 
@@ -112,6 +170,7 @@ body {
 .buttonFold:hover {
     background-color: #c0392b;
 }
+
 
 @media (max-width: 768px) {
     .table {

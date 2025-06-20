@@ -9,6 +9,24 @@
 </head>
 <body>
     <div id="tableEl" class="table">
+        <div class="tableContent">
+
+      <div id="tableCardsEl" class="tableCards">
+        <div class="mesa-carta">
+        <span class="value">{{ flop1 }}</span>
+        <span class="suit {{ flop1_color }}">{{ flop1_suit }}</span>
+      </div>
+      <div class="mesa-carta">
+        <span class="value">{{ flop2 }}</span>
+        <span class="suit {{ flop2_color }}">{{ flop2_suit }}</span>
+      </div>
+      <div class="mesa-carta">
+        <span class="value">{{ flop3 }}</span>
+        <span class="suit {{ flop3_color }}">{{ flop3_suit }}</span>
+      </div>
+                </div>
+
+                <div class="player-cards">
                 <div id="card1El" class="card1">
                     <span class="value">{{ card1 }}</span>
                     <span class="suit {{ color1 }}">{{ suit1 }}</span>
@@ -17,9 +35,11 @@
                     <span class="value">{{ card2 }}</span>
                     <span class="suit {{ color2 }}">{{ suit2 }}</span>
                 </div>
+                </div>
+         
     </div>
     <div class="buttons">
-        <button class="buttonBet">Bet</button>
+        <button class="buttonBet" >Bet</button>
         <button class="buttonFold">Fold</button>
     </div>
 </body>

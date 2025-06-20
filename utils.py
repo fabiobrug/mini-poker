@@ -10,3 +10,16 @@ def give_card():
     suit = random.choice(allSuits)
     color = "red" if suit in redSuits else "black"
     return {"value": value, "suit": suit, "color": color}
+
+def give_deck():
+    deck = []
+    for value in cards:
+        for suit in allSuits:
+            color = "red" if suit in redSuits else "black"
+            deck.append({
+                "value": value,
+                "suit": suit,
+                "color": color
+            })
+    return deck
+
