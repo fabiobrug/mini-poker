@@ -11,6 +11,17 @@
     <div id="tableEl" class="table">
         <div class="tableContent">
 
+             <div class="ia-cards">
+                <div class="ia-card">
+                    <span class="value">{{ ia_card1 }}</span>
+                    <span class="suit {{ ia_color1 }}">{{ ia_suit1 }}</span>
+                </div>
+                 <div class="ia-card">
+                    <span class="value">{{ ia_card2 }}</span>
+                    <span class="suit {{ ia_color2 }}">{{ ia_suit2 }}</span>
+                </div>
+                </div>
+
       <div id="tableCardsEl" class="tableCards">
         <div class="mesa-carta">
         <span class="value">{{ flop1 }}</span>
@@ -24,8 +35,13 @@
         <span class="value">{{ flop3 }}</span>
         <span class="suit {{ flop3_color }}">{{ flop3_suit }}</span>
       </div>
-                </div>
-
+      {% if turn %}
+    <div class="mesa-carta">
+        <span class="value">{{ turn_value }}</span>
+        <span class="suit {{ turn_color }}">{{ turn_suit }}</span>
+    </div>
+    {% endif %}
+      </div>
                 <div class="player-cards">
                 <div id="card1El" class="card1">
                     <span class="value">{{ card1 }}</span>
@@ -39,8 +55,11 @@
          
     </div>
     <div class="buttons">
-        <button class="buttonBet" >Bet</button>
+        <form action="/bet" method="POST">
+        <button id="btnBet" class="buttonBet" type="submit" value="bet" name="play">Bet</button>
+        </form>
         <button class="buttonFold">Fold</button>
     </div>
+    <script src="..\static\script.js"></script>
 </body>
 </html>

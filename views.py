@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, session, redirect, url_for
 from utils import give_deck
 import random
 
@@ -8,15 +8,69 @@ views = Blueprint(__name__, "views")
 def home():
 
     deck = give_deck()
-    cards = random.sample(deck, 2)
-    card1 = cards[0]
-    card2 = cards[1]
-    tableCards = random.sample(deck, 3)
-    flop1 = tableCards[0]
-    flop2 = tableCards[1]
-    flop3 = tableCards[2]
-    
+    random.shuffle(deck)
+    session["deck"] = deck
 
+    card1 = session["deck"].pop()
+    card2 = session["deck"].pop() 
+    ia_card1 = session["deck"].pop()
+    ia_card2 = session["deck"].pop()
+
+    flop = [session["deck"].pop(), session["deck"].pop(), session["deck"].pop()]
+    session["flop"] = flop
+
+    
+    session["card1"] = card1
+    session["card2"] = card2
+    session["ia_card1"] = ia_card1
+    session["ia_card2"] = ia_card2
+    
+    
+    return render_template(
+        "index.html",
+        card1=card1["value"],
+        suit1=card1["suit"],
+        color1=card1["color"],
+        card2=card2["value"],
+        suit2=card2["suit"],
+        color2=card2["color"],
+        flop1=flop[0]["value"],
+        flop1_suit=flop[0]["suit"],
+        flop1_color=flop[0]["color"],
+        flop2=flop[1]["value"],
+        flop2_suit=flop[1]["suit"],
+        flop2_color=flop[1]["color"],
+        flop3=flop[2]["value"],
+        flop3_suit=flop[2]["suit"],
+        flop3_color=flop[2]["color"],
+        ia_card1=ia_card1["value"],
+        ia_suit1=ia_card1["suit"],
+        ia_color1=ia_card1["color"],
+        ia_card2=ia_card2["value"],
+        ia_suit2=ia_card2["suit"],
+        ia_color2=ia_card2["color"],
+        turn=None
+    )
+
+@views.route("/bet", methods=["POST"])
+def bet():
+    deck = session.get("deck", [])
+    
+    if len(deck) == 0:
+        return redirect(url_for("views.home"))
+    
+    flop = session.get("flop", [])
+    card1 = session.get("card1")
+    card2 = session.get("card2")
+    ia_card1 = session.get("ia_card1")
+    ia_card2 = session.get("ia_card2")
+
+    if not deck:
+        return "Erro: baralho não encontrado na sessão", 400
+    
+    turn = deck.pop()
+    session["deck"] = deck
+    session["turn"] = turn
 
     return render_template(
         "index.html",
@@ -26,13 +80,26 @@ def home():
         card2=card2["value"],
         suit2=card2["suit"],
         color2=card2["color"],
-        flop1=flop1["value"],
-        flop1_suit=flop1["suit"],
-        flop1_color=flop1["color"],
-        flop2=flop2["value"],
-        flop2_suit=flop2["suit"],
-        flop2_color=flop2["color"],
-        flop3=flop3["value"],
-        flop3_suit=flop3["suit"],
-        flop3_color=flop3["color"],
+
+        flop1=flop[0]["value"],
+        flop1_suit=flop[0]["suit"],
+        flop1_color=flop[0]["color"],
+        flop2=flop[1]["value"],
+        flop2_suit=flop[1]["suit"],
+        flop2_color=flop[1]["color"],
+        flop3=flop[2]["value"],
+        flop3_suit=flop[2]["suit"],
+        flop3_color=flop[2]["color"],
+
+        ia_card1=ia_card1["value"],
+        ia_suit1=ia_card1["suit"],
+        ia_color1=ia_card1["color"],
+        ia_card2=ia_card2["value"],
+        ia_suit2=ia_card2["suit"],
+        ia_color2=ia_card2["color"],
+
+        turn=turn,
+        turn_value=turn["value"],
+        turn_suit=turn["suit"],
+        turn_color=turn["color"],
     )
