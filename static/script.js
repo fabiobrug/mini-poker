@@ -1,7 +1,6 @@
 /*let btnBet = document.getElementById("btnBet")
 let tableCards = document.getElementById("tableCardsEl")
 
-
 btnBet.addEventListener('click', () => {
     const newCard = document.createElement("div")
     newCard.classList.add("mesa-carta")
@@ -12,4 +11,5 @@ btnBet.addEventListener('click', () => {
     `
 
      tableCards.appendChild(newCard);
+     --to add--
 })*/
