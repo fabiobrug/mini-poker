@@ -5,6 +5,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: 'Playfair Display', serif;
 }
 
 .table {
@@ -180,17 +181,19 @@ body {
 
 
 .buttons {
+    font-family: 'Playfair Display', serif;
     position: absolute;
     bottom: 2rem;
-    left: 11%;
+    left: 18%;
     transform: translateX(-50%);
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: 1.2rem;
     z-index: 10;
 }
 
-.buttonBet, .buttonFold {
-    padding: 2rem 3rem;
+.buttonBet, .buttonFold, .buttonCheck {
+    padding: 0.8rem 1.5rem;
     border: none;
     border-radius: 0.5rem;
     font-size: 1rem;
@@ -198,6 +201,7 @@ body {
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'Playfair Display', serif;
 }
 
 .buttonBet {
@@ -211,13 +215,50 @@ body {
 
 .buttonFold {
     background-color: #E74C3C;
-    color: white;
+    color: #1C1C1C;
 }
 
 .buttonFold:hover {
     background-color: #c0392b;
 }
 
+.buttonCheck {
+    background-color: #f1870f;
+    color: #1C1C1C;
+}
+
+.buttonCheck:hover {
+    background-color:  #bb690c;
+}
+
+
+.buttonOdd {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #12da9e;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.number, .chips {
+    color: #fff;
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.pot{
+    position: absolute;
+    right: 70%;
+    font-size: 2.5vw;
+    color: #fff;
+}
 
 @media (max-width: 768px) {
     .table {

@@ -23,3 +23,7 @@ def give_deck():
             })
     return deck
 
+def current_chip():
+    currentChip = 640
+    chip = currentChip
+    

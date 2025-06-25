@@ -6,9 +6,13 @@
     <title>Poker</title>
     <link rel="stylesheet" href="..\static\style.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" >
+
 </head>
+
 <body>
     <div id="tableEl" class="table">
+      <h1 id="potQnt" class="pot">Pot :</h1>
         <div class="tableContent">
 
              <div class="ia-cards">
@@ -36,7 +40,7 @@
         <span class="suit {{ flop3_color }}">{{ flop3_suit }}</span>
       </div>
       {% if turn %}
-    <div class="mesa-carta">
+    <div class="mesa-carta" id="turn-card">
         <span class="value">{{ turn_value }}</span>
         <span class="suit {{ turn_color }}">{{ turn_suit }}</span>
     </div>
@@ -55,10 +59,21 @@
          
     </div>
     <div class="buttons">
+      
         <form action="/bet" method="POST">
         <button id="btnBet" class="buttonBet" type="submit" value="bet" name="play">Bet</button>
         </form>
+        <button class="buttonCheck">Check</button>
         <button class="buttonFold">Fold</button>
+
+        <button class="buttonOdd" id="minus"><i class="fa-solid fa-minus fa-2x"></i></button>
+        
+        <h2 id="value" class="number">20</h2>
+
+        <button class="buttonOdd" id="plus"><i class="fa-solid fa-plus fa-2x"></i></button>
+        
+        <h2 id="chips" class="chips">Chips: <span id="chipQnt">620</span></h2>
+
     </div>
     <script src="..\static\script.js"></script>
 </body>

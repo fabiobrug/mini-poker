@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, redirect, url_for
+from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify
 from utils import give_deck
 import random
 
@@ -65,15 +65,14 @@ def bet():
     ia_card1 = session.get("ia_card1")
     ia_card2 = session.get("ia_card2")
 
-    if not deck:
-        return "Erro: baralho não encontrado na sessão", 400
-    
-    turn = deck.pop()
-    session["deck"] = deck
-    session["turn"] = turn
+    if "turn" in session:
+        turn = session["turn"]
+    else:
+        turn = deck.pop()
+        session["deck"] = deck
+        session["turn"] = turn
 
-    return render_template(
-        "index.html",
+    return jsonify(
         card1=card1["value"],
         suit1=card1["suit"],
         color1=card1["color"],
