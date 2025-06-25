@@ -260,6 +260,23 @@ body {
     color: #fff;
 }
 
+.cab1{
+    position: absolute;
+    right: 67%;
+    top: 30%;
+    color: #c3dfb9;
+}
+
+.cab2{
+    position: absolute;
+    right: 69%;
+    top: 70%;
+    color: #c3dfb9;
+}
+
+
+
+
 @media (max-width: 768px) {
     .table {
         flex-direction: column;

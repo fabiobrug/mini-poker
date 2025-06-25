@@ -1,6 +1,7 @@
 let btnBet =  document.getElementById("btnBet")
 
-const turnCard = document.getElementById('turn-card');
+let playerValue = document.getElementById("pla")
+let iaValue = document.getElementById("comp")
 
 let pot = document.getElementById("potQnt")
 
@@ -13,6 +14,8 @@ let chipQnt = document.getElementById("chipQnt")
 
 let currentValue = parseInt(value.innerText)
 let currentChip = parseInt(chipQnt.innerText)
+
+const turnCard = document.getElementById('turn-card');
 
 minus.disabled = true;
 
@@ -81,10 +84,12 @@ btnBet.addEventListener('click', async (event) => {
     let potQnt = currentValue + iaBet
     currentChip = currentChip - currentValue;
     chipQnt.innerHTML = currentChip;
+    pot.innerHTML = `Pot: ${potQnt}`;
+    playerValue.innerHTML = `Player: ${currentValue}`
+    iaValue.innerHTML = `Computer: ${iaBet}`
     currentValue = 20;
     value.innerHTML = currentValue
     minValue()
-    pot.innerHTML = `Pot: ${potQnt}`;
 
     const response = await fetch('/bet', { method: 'POST' });
     const data = await response.json();
