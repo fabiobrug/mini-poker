@@ -102,3 +102,44 @@ def bet():
         turn_suit=turn["suit"],
         turn_color=turn["color"],
     )
+
+@views.route("/fold", methods=["POST"])
+def fold():
+    deck = give_deck()
+    random.shuffle(deck)
+    
+    if len(deck) < 0:
+        return jsonify({"error": "Deck vazio"}), 400
+    
+    card1 = session["deck"].pop()
+    card2 = session["deck"].pop()
+    ia_card1 = session["deck"].pop()
+    ia_card2 = session["deck"].pop()
+    session["deck"] = deck
+
+    return jsonify( 
+        player_cards=[
+            {
+                "value": card1["value"],
+                "suit": card1["suit"],
+                "color": card1["color"],
+            },
+            {
+                "value": card2["value"],
+                "suit": card2["suit"],
+                "color": card2["color"],
+            }
+        ],
+        ia_cards=[
+            {
+                "value": ia_card1["value"],
+                "suit": ia_card1["suit"],
+                "color": ia_card1["color"],
+            },
+            {
+                "value": ia_card2["value"],
+                "suit": ia_card2["suit"],
+                "color": ia_card2["color"],
+            }
+        ]
+    )
