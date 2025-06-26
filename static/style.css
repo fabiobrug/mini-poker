@@ -281,7 +281,12 @@ body {
     color: #c3dfb9;
 }
 
-
+.cab3{
+    position: absolute;
+    right: 44%;
+    top: 1%;
+    color: #fff;
+}
 
 
 @media (max-width: 768px) {
