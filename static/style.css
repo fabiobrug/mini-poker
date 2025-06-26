@@ -297,6 +297,10 @@ body {
 }
 
 .cab4_active{
+    position: absolute;
+    right: 65%;
+    top: 2%;
+    color: #fff;
     opacity: 1;
 }
 
