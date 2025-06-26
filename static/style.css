@@ -53,7 +53,7 @@ body {
   padding: 0.5rem;
   box-sizing: border-box;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: scale 0.2s ease-in-out;
    gap: 0.8rem;
    opacity: 0;
 }
@@ -286,6 +286,18 @@ body {
     right: 44%;
     top: 1%;
     color: #fff;
+}
+
+.cab4{
+    position: absolute;
+    right: 65%;
+    top: 2%;
+    color: #fff;
+    opacity: 0;
+}
+
+.cab4_active{
+    opacity: 1;
 }
 
 

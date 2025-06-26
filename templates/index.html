@@ -13,6 +13,7 @@
 <body>
     <div id="tableEl" class="table">
       <h1 id="potQnt" class="pot">Pot :</h1>
+      <h3 id="loading" class="cab4">Computer is thinking...</h3>
       <h2 id="compChips" class="cab3">Computer Chips: <span id="compChipQnt">640</span></h2>
       <h2 id="comp" class="cab1">Computer :</h2>
       <h2 id="pla" class="cab2">Player :</h2>
@@ -30,15 +31,15 @@
                 </div>
 
       <div id="tableCardsEl" class="tableCards">
-        <div class="mesa-carta">
+        <div id="flop1" class="mesa-carta">
         <span class="value">{{ flop1 }}</span>
         <span class="suit {{ flop1_color }}">{{ flop1_suit }}</span>
       </div>
-      <div class="mesa-carta">
+      <div id="flop2" class="mesa-carta">
         <span class="value">{{ flop2 }}</span>
         <span class="suit {{ flop2_color }}">{{ flop2_suit }}</span>
       </div>
-      <div class="mesa-carta">
+      <div id="flop3" class="mesa-carta">
         <span class="value">{{ flop3 }}</span>
         <span class="suit {{ flop3_color }}">{{ flop3_suit }}</span>
       </div>

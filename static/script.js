@@ -3,6 +3,8 @@ let btnBet = document.getElementById("btnBet");
 let btnCheck = document.getElementById("btnCheck");
 let btnFold = document.getElementById("btnFold");
 
+let flopCards = document.querySelectorAll(".mesa-carta");
+
 // Exibição dos valores apostados
 let playerValue = document.getElementById("pla");
 let iaValue = document.getElementById("comp");
@@ -31,12 +33,21 @@ const turnCard = document.getElementById("turn-card");
 let preFlopTest = true;
 let foldOn = true;
 let turn = false;
+let move = 1;
 
 // Desativa o botão "-" inicialmente
 minus.disabled = true;
 
 // Fichas iniciais da IA
 let iaChips = 640;
+
+// IA loading
+let loading = document.getElementById("loading")
+
+// Jogadas IA 
+let check = false;
+let fold = false;
+let bet = false;
 
 // =======================
 // Funções Auxiliares
@@ -102,6 +113,13 @@ function randomIaValue() {
   return choice;
 }
 
+// Jogadas no turn
+/*function turn(){
+  
+}*/
+
+// Jogadas flop
+
 // Controla a ativação do botão Fold (desativa após o jogador apostar)
 function foldTest() {
     if(foldOn && turn){
@@ -112,6 +130,12 @@ function foldTest() {
     pot.innerHTML = `Pot:`;
     playerValue.innerHTML = `Player:`;
     iaValue.innerHTML = `Computer:`;
+    flopCards.forEach((el) => {
+    el.classList.add("mesa-carta");
+    el.classList.remove("mesa-cartaPos");
+    btnCheck.style.opacity = 0;
+  });
+
     }
     else if (foldOn && !turn) {
     btnFold.disabled = true;
@@ -120,6 +144,90 @@ function foldTest() {
     btnFold.disabled = false;
     btnFold.style.backgroundColor = " #E74C3C";
   }
+}
+
+async function iaPlay(){
+  let choice;
+
+  const response = await fetch("/fold", { method: "POST" });
+  const data = await response.json();
+
+  const iaCard1 = data.ia_cards[0];
+  const iaCard2 = data.ia_cards[1];
+
+  console.log("CARTA 1:", iaCard1 ,"CARTA 2:", iaCard2)
+
+  if((iaCard1.value) == (iaCard2.value)){
+    const luck = Math.random();
+
+    if(luck < 0.60){
+      check = true
+    }
+    else if(luck < 0.95){
+      bet = true
+    }
+    else{
+      fold = true
+    }
+  }
+  else if(["A","K","Q","J","10"].includes(iaCard1.value) && ["A","K","Q","J","10"].includes(iaCard2.value)){
+    const luck = Math.random();
+
+    if(luck < 0.60){
+      check = true
+    }
+    else if(luck < 0.90){
+      bet = true
+    }
+    else{
+      fold = true
+    }
+  }
+  else if(["A","K","Q","J","10"].includes(iaCard1.value) && ["9","8","7","6","5","4","3","2"].includes(iaCard2.value) || ["A","K","Q","J","10"].includes(iaCard2.value) && ["9","8","7","6","5","4","3","2"].includes(iaCard1.value)){
+    const luck = Math.random();
+
+    if(luck < 0.50){
+      check = true
+    }
+    else if(luck < 0.70){
+      bet = true
+    }
+    else{
+      fold = true
+    }
+  }
+  else if(["9","8","7","6","5","4","3","2"].includes(iaCard1.value) && ["9","8","7","6","5","4","3","2"].includes(iaCard2.value)){
+    const luck = Math.random();
+
+    if(luck < 0.20){
+      check = true
+    }
+    else if(luck < 0.40){
+      bet = true
+    }
+    else{
+      fold = true
+    }
+  }
+  else{
+    check = true;
+  }
+
+  if(bet){
+    choice = "bet"
+    return choice;
+  }
+  else if(fold){
+    choice = "fold"
+    return choice;
+  }
+  else if(check){
+    choice = "check"
+    return choice;
+  }
+
+  return choice;
+
 }
 
 // =======================
@@ -136,7 +244,6 @@ btnBet.addEventListener("click", async (event) => {
   btnCheck.style.opacity = 1;
 
   // Mostra cartas comunitárias viradas (flop)
-  let flopCards = document.querySelectorAll(".mesa-carta");
   flopCards.forEach((el) => {
     el.classList.add("mesa-cartaPos");
   });
@@ -158,6 +265,18 @@ btnBet.addEventListener("click", async (event) => {
   value.innerHTML = currentValue;
   minValue();
 
+  if(move == 1){
+    loading.classList.add("cab4_active")
+    setTimeout(async () => {
+    loading.classList.remove("cab4_active")
+    loading.classList.add("cab4")
+    await iaPlay()
+    console.log("Bet:",bet)
+    console.log("Check:",check)
+    console.log("Fold:",fold)
+    },3000)
+  }
+  else if(move == 2){
   // Solicita carta do turn ao servidor
   const response = await fetch("/bet", { method: "POST" });
   const data = await response.json();
@@ -182,9 +301,12 @@ btnBet.addEventListener("click", async (event) => {
       <span class="value">${data.turn.value}</span>
       <span class="suit ${data.turn.color}">${data.turn.suit}</span>
     `;
+    turn()
   }
+}
 
-  turn = true;
+    
+  
 
   // (espaço para lógica do river ou showdown futuramente)
 
@@ -205,11 +327,17 @@ btnFold.addEventListener("click", async (event) => {
   // Seleciona elementos onde as cartas serão exibidas
   const playerCard1 = document.getElementById("card1El");
   const playerCard2 = document.getElementById("card2El");
-  //-----ADICIONAR FLOP AQUI, FAZER IGUAL FIZ DAS CARTAS DOS JOGADORES, TEM QUE COLOCAR NO HTML"-------
+  const flopCard1 = document.getElementById("flop1");
+  const flopCard2 = document.getElementById("flop2");
+  const flopCard3 = document.getElementById("flop3");
 
   // Limpa cartas anteriores
   playerCard1.innerHTML = "";
   playerCard2.innerHTML = "";
+  flopCard1.innerHTML = "";
+  flopCard2.innerHTML = "";
+  flopCard3.innerHTML = "";
+  
   // (precisa ainda exibir cartas da IA)
 
   // Renderiza carta 1 do jogador
@@ -227,6 +355,32 @@ btnFold.addEventListener("click", async (event) => {
   div2.innerHTML = `<span class="value">${card2.value}</span>
                     <span class="suit ${card2.color}">${card2.suit}</span>`;
   playerCard2.appendChild(div2);
+
+  // Renderiza carta 1 do flop 
+  const flop1 = data.flop_cards[0];
+  const div3 = document.createElement("div");
+  div3.classList.add("tableCards");
+  div3.innerHTML = `<span class="value">${flop1.value}</span>
+                    <span class="suit ${flop1.color}">${flop1.suit}</span>`;
+  flopCard1.appendChild(div3);
+
+  // Renderiza carta 2 do flop 
+  const flop2 = data.flop_cards[1];
+  const div4 = document.createElement("div");
+  div4.classList.add("tableCards");
+  div4.innerHTML = `<span class="value">${flop2.value}</span>
+                    <span class="suit ${flop2.color}">${flop2.suit}</span>`;
+  flopCard2.appendChild(div4);
+
+  // Renderiza carta 3 do flop 
+  const flop3 = data.flop_cards[2];
+  const div5 = document.createElement("div");
+  div5.classList.add("tableCards");
+  div5.innerHTML = `<span class="value">${flop3.value}</span>
+                    <span class="suit ${flop3.color}">${flop3.suit}</span>`;
+  flopCard3.appendChild(div5);
+
+
 
   foldOn = true;
   foldTest(); // desativa botão fold novamente
