@@ -200,11 +200,12 @@ btnFold.addEventListener("click", async (event) => {
   const response = await fetch("/fold", { method: "POST" });
   const data = await response.json();
 
-  console.log(data.player_cards, data.ia_cards);
+  console.log(data.player_cards, data.ia_cards, data.flop_cards);
 
   // Seleciona elementos onde as cartas serão exibidas
   const playerCard1 = document.getElementById("card1El");
   const playerCard2 = document.getElementById("card2El");
+  //-----ADICIONAR FLOP AQUI, FAZER IGUAL FIZ DAS CARTAS DOS JOGADORES, TEM QUE COLOCAR NO HTML"-------
 
   // Limpa cartas anteriores
   playerCard1.innerHTML = "";

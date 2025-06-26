@@ -107,7 +107,7 @@ def bet():
 def fold():
     deck = give_deck()
     random.shuffle(deck)
-    
+
     if len(deck) < 0:
         return jsonify({"error": "Deck vazio"}), 400
     
@@ -115,6 +115,9 @@ def fold():
     card2 = session["deck"].pop()
     ia_card1 = session["deck"].pop()
     ia_card2 = session["deck"].pop()
+    flop_card1 = session["deck"].pop()
+    flop_card2 = session["deck"].pop()
+    flop_card3 = session["deck"].pop()
     session["deck"] = deck
 
     return jsonify( 
@@ -140,6 +143,23 @@ def fold():
                 "value": ia_card2["value"],
                 "suit": ia_card2["suit"],
                 "color": ia_card2["color"],
+            }
+        ],
+        flop_cards=[
+             {
+                "value": flop_card1["value"],
+                "suit": flop_card1["suit"],
+                "color": flop_card1["color"],
+            },
+            {
+                "value": flop_card2["value"],
+                "suit": flop_card2["suit"],
+                "color": flop_card2["color"],
+            },
+            {
+                "value": flop_card3["value"],
+                "suit": flop_card3["suit"],
+                "color": flop_card3["color"],
             }
         ]
     )
