@@ -74,22 +74,33 @@ function maxValue() {
   console.log(currentChip)
   console.log(currentValue)
 
-  let maxValue = currentChip + currentValue
+  let maxValue;
+  
+
+  maxValue = currentChip + currentValue
+ 
 
   if (currentChip <= 0) {
     currentValue = maxValue
     currentChip = 0;
     plus.disabled = true;
+    btnBet.innerHTML = "All in"
   }
 }
 
 // Diminui a aposta pela metade
 minus.addEventListener("click", () => {
+  if(flop){
+  btnBet.innerHTML = "Raise"
+  }
+  else{
+    btnBet.innerHTML = "Bet"
+  }
   plus.disabled = false;
   currentChip = currentValue / 2 + currentChip;
   currentValue = currentValue / 2;
-  chipQnt.innerHTML = currentChip;
-  value.innerHTML = currentValue;
+  chipQnt.innerHTML = Math.floor(currentChip);
+  value.innerHTML = Math.floor(currentValue);
   minValue();
 });
 
@@ -99,8 +110,8 @@ plus.addEventListener("click", () => {
   currentChip = currentChip - currentValue;
   currentValue += currentValue;
   maxValue(); 
-  chipQnt.innerHTML = currentChip;
-  value.innerHTML = currentValue;
+  chipQnt.innerHTML = Math.floor(currentChip);
+  value.innerHTML = Math.floor(currentValue);
 });
 
 // Simula o valor da aposta da IA com base em chance
@@ -303,7 +314,8 @@ btnBet.addEventListener("click", async (event) => {
   currentCompChip = currentCompChip - iaBet;
   compChipQnt.innerHTML = currentCompChip;
   potQnt = currentValue + iaBet;
-  currentChip = currentChip - currentValue;
+  //currentChip = currentChip - currentValue;
+  currentChip = currentChip - 20;
   chipQnt.innerHTML = currentChip;
   pot.innerHTML = `Pot: ${potQnt}`;
   playerValue.innerHTML = `Player: ${currentValue}`;
@@ -314,7 +326,18 @@ btnBet.addEventListener("click", async (event) => {
   value.innerHTML = currentValue;
   minValue();
 
-  if(move == 1){
+
+  // All in 
+  if(currentChip == 0){
+    btnBet.disabled = true;
+    btnCheck.disabled = true;
+    btnFold.disabled = true;
+    btnBet.style.backgroundColor = "gray";
+    btnCheck.style.backgroundColor = "gray";
+    btnFold.style.backgroundColor = "gray";
+  }
+
+  else if(move == 1){
     flop = true;
     loading.classList.add("cab4_active")
     btnBet.disabled = true
