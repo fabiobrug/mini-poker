@@ -71,7 +71,14 @@ function minValue() {
 
 // Desativa o botão de aumentar aposta quando chega no limite possível
 function maxValue() {
+  console.log(currentChip)
+  console.log(currentValue)
+
+  let maxValue = currentChip + currentValue
+
   if (currentChip <= 0) {
+    currentValue = maxValue
+    currentChip = 0;
     plus.disabled = true;
   }
 }
@@ -91,9 +98,9 @@ plus.addEventListener("click", () => {
   minus.disabled = false;
   currentChip = currentChip - currentValue;
   currentValue += currentValue;
+  maxValue(); 
   chipQnt.innerHTML = currentChip;
   value.innerHTML = currentValue;
-  maxValue(); // --------- MAX VALUE NAO FUNCIONA DIREITO ---------------
 });
 
 // Simula o valor da aposta da IA com base em chance
