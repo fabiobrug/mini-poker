@@ -98,9 +98,6 @@ def bet():
         ia_color2=ia_card2["color"],
 
         turn=turn,
-        turn_value=turn["value"],
-        turn_suit=turn["suit"],
-        turn_color=turn["color"],
     )
 
 @views.route("/fold", methods=["POST"])

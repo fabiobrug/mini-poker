@@ -1,6 +1,12 @@
 // Mesa
 let tableEl = document.getElementById("tableEl");
 
+// Sons 
+let flipSound = new Audio("static/sounds/flipcard-91468.mp3")
+let foldSound = new Audio("static/sounds/carddrop2-92718.mp3")
+let chipSound = new Audio("static/sounds/allinpushchips-96121.mp3")
+
+
 // Botões principais de ação do jogador
 let btnBet = document.getElementById("btnBet");
 let btnCheck = document.getElementById("btnCheck");
@@ -8,7 +14,7 @@ let btnFold = document.getElementById("btnFold");
 
 // Exibir na tela
 let flopCards = document.querySelectorAll(".mesa-carta");
-let betText = document.createElement("h3")
+let betText = document.createElement("h3");
 
 // Exibição dos valores apostados
 let playerValue = document.getElementById("pla");
@@ -28,7 +34,6 @@ let currentValue = parseInt(value.innerText);
 let currentChip = parseInt(chipQnt.innerText);
 let maxChip;
 
-
 //Valor atual da aposta e fichas do computador
 let compChipQnt = document.getElementById("compChipQnt");
 let currentCompChip = parseInt(compChipQnt.innerText);
@@ -42,6 +47,7 @@ let foldOn = true;
 let turn = false;
 let move = 1;
 let flop = false;
+let choice;
 
 // Desativa o botão "-" inicialmente
 minus.disabled = true;
@@ -51,12 +57,13 @@ let iaChips = 640;
 let iaBet;
 
 // IA loading
-let loading = document.getElementById("loading")
+let loading = document.getElementById("loading");
 
-// Jogadas IA 
+// Jogadas IA
 let check = false;
 let fold = false;
 let bet = false;
+let call = false;
 
 // =======================
 // Funções Auxiliares
@@ -71,30 +78,27 @@ function minValue() {
 
 // Desativa o botão de aumentar aposta quando chega no limite possível
 function maxValue() {
-  console.log(currentChip)
-  console.log(currentValue)
+  console.log(currentChip);
+  console.log(currentValue);
 
   let maxValue;
-  
 
-  maxValue = currentChip + currentValue
- 
+  maxValue = currentChip + currentValue;
 
   if (currentChip <= 0) {
-    currentValue = maxValue
+    currentValue = maxValue;
     currentChip = 0;
     plus.disabled = true;
-    btnBet.innerHTML = "All in"
+    btnBet.innerHTML = "All in";
   }
 }
 
 // Diminui a aposta pela metade
 minus.addEventListener("click", () => {
-  if(flop){
-  btnBet.innerHTML = "Raise"
-  }
-  else{
-    btnBet.innerHTML = "Bet"
+  if (flop) {
+    btnBet.innerHTML = "Raise";
+  } else {
+    btnBet.innerHTML = "Bet";
   }
   plus.disabled = false;
   currentChip = currentValue / 2 + currentChip;
@@ -109,7 +113,7 @@ plus.addEventListener("click", () => {
   minus.disabled = false;
   currentChip = currentChip - currentValue;
   currentValue += currentValue;
-  maxValue(); 
+  maxValue();
   chipQnt.innerHTML = Math.floor(currentChip);
   value.innerHTML = Math.floor(currentValue);
 });
@@ -118,9 +122,15 @@ plus.addEventListener("click", () => {
 function randomIaValue() {
   let choice;
 
-  const valueOptions65 = [Math.floor(currentCompChip/32), Math.floor(currentCompChip/16)];
-  const valueOptions20 = [Math.floor(currentCompChip/8), Math.floor(currentCompChip/4)];
-  const valueOptions10 = Math.floor(currentCompChip/2);
+  const valueOptions65 = [
+    Math.floor(currentCompChip / 32),
+    Math.floor(currentCompChip / 16),
+  ];
+  const valueOptions20 = [
+    Math.floor(currentCompChip / 8),
+    Math.floor(currentCompChip / 4),
+  ];
+  const valueOptions10 = Math.floor(currentCompChip / 2);
   const valueOptions5 = currentCompChip;
 
   const luck = Math.random();
@@ -149,192 +159,188 @@ function randomIaValue() {
 
 // Controla a ativação do botão Fold (desativa após o jogador apostar)
 function foldTest() {
-    if (flop) {
-    currentCompChip = potQnt + currentCompChip
+  if (flop) {
+    currentCompChip = potQnt + currentCompChip;
     compChipQnt.innerHTML = currentCompChip;
     btnCheck.style.opacity = 1;
-    btnCheck.innerHTML = "Check"
-    btnBet.innerHTML = "Bet"
+    btnCheck.innerHTML = "Check";
+    btnBet.innerHTML = "Bet";
     pot.innerHTML = `Pot :`;
     playerValue.innerHTML = `Player :`;
     iaValue.innerHTML = `Computer :`;
-    betText.innerHTML = ""
+    betText.innerHTML = "";
     btnFold.disabled = false;
     btnFold.style.backgroundColor = " #E74C3C";
     flopCards.forEach((el) => {
-    el.classList.add("mesa-carta");
-    el.classList.remove("mesa-cartaPos");
-    btnCheck.style.opacity = 0;
+      el.classList.add("mesa-carta");
+      el.classList.remove("mesa-cartaPos");
+      btnCheck.style.opacity = 0;
     });
     flop = false;
-}
-    if(foldOn){
+  }
+  if (foldOn) {
     btnFold.disabled = true;
     btnFold.style.backgroundColor = "gray";
     pot.innerHTML = `Pot :`;
     playerValue.innerHTML = `Player :`;
     iaValue.innerHTML = `Computer :`;
     flopCards.forEach((el) => {
-    el.classList.add("mesa-carta");
-    el.classList.remove("mesa-cartaPos");
-    btnCheck.style.opacity = 0;
-  });
-    }
-  else {
+      el.classList.add("mesa-carta");
+      el.classList.remove("mesa-cartaPos");
+      btnCheck.style.opacity = 0;
+    });
+  } else {
     btnFold.disabled = false;
     btnFold.style.backgroundColor = " #E74C3C";
   }
-
 }
 
-async function iaPlay(){
-  let choice;
-
+async function iaPlay() {
   const response = await fetch("/fold", { method: "POST" });
   const data = await response.json();
 
   const iaCard1 = data.ia_cards[0];
   const iaCard2 = data.ia_cards[1];
 
-  console.log("CARTA 1:", iaCard1 ,"CARTA 2:", iaCard2)
+  console.log("CARTA 1:", iaCard1, "CARTA 2:", iaCard2);
 
-  if((iaCard1.value) == (iaCard2.value)){
+  //Para esse primeiro caso, mais para frente adicionar resposta da IA com base na quantidade de fichas apostadas pelo jogador tambem!!!
+  if(move==1){
+    if (iaCard1.value == iaCard2.value) {
     const luck = Math.random();
 
-    if(luck < 0.60){
-      check = true
+    if (luck < 0.9) {
+      call = true;
+    } else {
+      fold = true;
     }
-    else if(luck < 0.95){
-      bet = true
-    }
-    else{
-      fold = true
-    }
-  }
-  else if(["A","K","Q","J","10"].includes(iaCard1.value) && ["A","K","Q","J","10"].includes(iaCard2.value)){
+  } else if (
+    ["A", "K", "Q", "J", "10"].includes(iaCard1.value) &&
+    ["A", "K", "Q", "J", "10"].includes(iaCard2.value)
+  ) {
     const luck = Math.random();
 
-    if(luck < 0.60){
-      check = true
+    if (luck < 0.9) {
+      call = true;
+    } else {
+      fold = true;
     }
-    else if(luck < 0.90){
-      bet = true
-    }
-    else{
-      fold = true
-    }
-  }
-  else if(["A","K","Q","J","10"].includes(iaCard1.value) && ["9","8","7","6","5","4","3","2"].includes(iaCard2.value) || ["A","K","Q","J","10"].includes(iaCard2.value) && ["9","8","7","6","5","4","3","2"].includes(iaCard1.value)){
+  } else if (
+    (["A", "K", "Q", "J", "10"].includes(iaCard1.value) &&
+      ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard2.value)) ||
+    (["A", "K", "Q", "J", "10"].includes(iaCard2.value) &&
+      ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard1.value))
+  ) {
     const luck = Math.random();
 
-    if(luck < 0.50){
-      check = true
+    if (luck < 0.7) {
+      call = true;
+    } else {
+      fold = true;
     }
-    else if(luck < 0.70){
-      bet = true
-    }
-    else{
-      fold = true
-    }
-  }
-  else if(["9","8","7","6","5","4","3","2"].includes(iaCard1.value) && ["9","8","7","6","5","4","3","2"].includes(iaCard2.value)){
+  } else if (
+    ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard1.value) &&
+    ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard2.value)
+  ) {
     const luck = Math.random();
 
-    if(luck < 0.20){
-      check = true
+    if (luck < 0.5) {
+      call = true;
+    } else {
+      fold = true;
     }
-    else if(luck < 0.40){
-      bet = true
-    }
-    else{
-      fold = true
-    }
-  }
-  else{
-    check = true;
+  } else {
+    call = true;
   }
 
-  if(bet){
-    choice = "bet"
+  if (call) {
+    choice = "call";
     return choice;
-  }
-  else if(fold){
-    choice = "fold"
-    return choice;
-  }
-  else if(check){
-    choice = "check"
+  } else if (fold) {
+    choice = "fold";
     return choice;
   }
 
   return choice;
+  }
 
+  else{
+    if (iaCard1.value == iaCard2.value) {
+    const luck = Math.random();
+
+    if (luck < 0.6) {
+      check = true;
+    } else if (luck < 0.95) {
+      bet = true;
+    } else {
+      fold = true;
+    }
+  } else if (
+    ["A", "K", "Q", "J", "10"].includes(iaCard1.value) &&
+    ["A", "K", "Q", "J", "10"].includes(iaCard2.value)
+  ) {
+    const luck = Math.random();
+
+    if (luck < 0.6) {
+      check = true;
+    } else if (luck < 0.9) {
+      bet = true;
+    } else {
+      fold = true;
+    }
+  } else if (
+    (["A", "K", "Q", "J", "10"].includes(iaCard1.value) &&
+      ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard2.value)) ||
+    (["A", "K", "Q", "J", "10"].includes(iaCard2.value) &&
+      ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard1.value))
+  ) {
+    const luck = Math.random();
+
+    if (luck < 0.5) {
+      check = true;
+    } else if (luck < 0.7) {
+      bet = true;
+    } else {
+      fold = true;
+    }
+  } else if (
+    ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard1.value) &&
+    ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard2.value)
+  ) {
+    const luck = Math.random();
+
+    if (luck < 0.2) {
+      check = true;
+    } else if (luck < 0.4) {
+      bet = true;
+    } else {
+      fold = true;
+    }
+  } else {
+    check = true;
+  }
+
+  if (bet) {
+    choice = "bet";
+    return choice;
+  } else if (fold) {
+    choice = "fold";
+    return choice;
+  } else if (check) {
+    choice = "check";
+    return choice;
+  }
+
+  return choice;
+  }
+  
 }
 
-function iaPlayBet(){
-  console.log(iaBet)
-  let iaBetTurn = randomIaValue()
-
-  iaBet = iaBet + iaBetTurn
-  let call = iaBet - currentValue;
-  iaValue.innerHTML = `Computer: ${iaBet}`;
-  betText.classList.add("cab4_active")
-  betText.innerHTML = `Computer Bet <strong>${iaBetTurn}<strong>!`
-  tableEl.appendChild(betText)
-  btnCheck.innerHTML = `Call (${call})`
-  btnBet.innerHTML = "Raise"
-  potQnt = potQnt + iaBetTurn;
-  pot.innerHTML = `Pot: ${potQnt}`;
-  currentCompChip = currentCompChip - iaBetTurn;
-  compChipQnt.innerHTML = currentCompChip;
-}
-
-function iaPlayCheck(){
-  return
-}
-
-function iaPlayFold(){
-    currentChip = potQnt + currentChip
-    chipQnt.innerHTML = currentChip;
-    btnCheck.style.opacity = 0;
-    btnCheck.innerHTML = "Check"
-    btnBet.innerHTML = "Bet"
-    pot.innerHTML = `Pot :`;
-    playerValue.innerHTML = `Player :`;
-    iaValue.innerHTML = `Computer :`;
-    betText.innerHTML = ""
-    btnFold.disabled = false;
-    btnFold.style.backgroundColor = " #E74C3C";
-    flopCards.forEach((el) => {
-    el.classList.add("mesa-carta");
-    el.classList.remove("mesa-cartaPos");
-    btnCheck.style.opacity = 0;
-    });
-    flop = false;
-}
-
-// =======================
-// Evento: Jogador aposta (BET)
-// =======================
-btnBet.addEventListener("click", async (event) => {
-  event.preventDefault();
-
-  // Jogador apostou, então não pode mais dar fold
-  foldOn = false;
-  foldTest();
-
-  // Ativa visual do botão Check
-  btnCheck.style.opacity = 1;
-
-  // Mostra cartas comunitárias viradas (flop)
-  flopCards.forEach((el) => {
-    el.classList.add("mesa-cartaPos");
-  });
-
+function iaPlayBet() {
   // Calcula apostas e atualiza pot
   iaBet = randomIaValue();
-  console.log(compChipQnt)
-  console.log(iaBet)
+  console.log(compChipQnt);
+  console.log(iaBet);
   currentCompChip = currentCompChip - iaBet;
   compChipQnt.innerHTML = currentCompChip;
   potQnt = currentValue + iaBet;
@@ -349,79 +355,178 @@ btnBet.addEventListener("click", async (event) => {
   currentValue = 20;
   value.innerHTML = currentValue;
   minValue();
+  console.log(iaBet);
 
+  let call = iaBet - currentValue;
+  iaValue.innerHTML = `Computer: ${iaBet}`;
+  betText.classList.add("cab4_active");
+  betText.innerHTML = `Computer Bet <strong>${iaBet}<strong>!`;
+  tableEl.appendChild(betText);
+  btnCheck.innerHTML = `Call (${call})`;
+  btnBet.innerHTML = "Raise";
+  potQnt = potQnt + iaBet;
+  pot.innerHTML = `Pot: ${potQnt}`;
+  currentCompChip = currentCompChip;
+  compChipQnt.innerHTML = currentCompChip;
+  move++;
+}
 
-  // All in 
-  if(currentChip == 0){
+function iaPlayCall(){
+betText.innerHTML = `Computer Call!`;
+  setTimeout(async () => {
+    currentChip = currentChip - currentValue;
+    currentCompChip = currentCompChip - currentValue;
+    chipQnt.innerHTML = currentChip;
+    compChipQnt.innerHTML = currentCompChip;
+    potQnt = currentValue * 2;
+
+    pot.innerHTML = `Pot: ${potQnt}`;
+    playerValue.innerHTML = `Player: ${currentValue}`;
+    iaValue.innerHTML = `Computer: ${currentValue}`;
+
+    flop = false;
+  }, 1000);
+  move++;
+  return;
+
+}
+
+function iaPlayCheck() {
+  //--------------VAI PRECISAR SER REFORMULADO!!!!!!!!-------------
+  betText.innerHTML = `Computer Check!`;
+  setTimeout(async () => {
+    currentChip = currentChip - currentValue;
+    currentCompChip = currentCompChip - currentValue;
+    chipQnt.innerHTML = currentChip;
+    compChipQnt.innerHTML = currentCompChip;
+    potQnt = currentValue * 2;
+
+    pot.innerHTML = `Pot: ${potQnt}`;
+    playerValue.innerHTML = `Player: ${currentValue}`;
+    iaValue.innerHTML = `Computer: ${currentValue}`;
+
+    flop = false;
+  }, 1000);
+  move++;
+  return;
+}
+
+function iaPlayFold() {
+  betText.innerHTML = `Computer Fold!`;
+  setTimeout(async () => {
+    currentChip = currentChip;
+    chipQnt.innerHTML = currentChip;
+    btnCheck.style.opacity = 0;
+    btnCheck.innerHTML = "Check";
+    btnBet.innerHTML = "Bet";
+    pot.innerHTML = `Pot :`;
+    playerValue.innerHTML = `Player :`;
+    iaValue.innerHTML = `Computer :`;
+    betText.innerHTML = "";
+    btnFold.disabled = false;
+    btnFold.style.backgroundColor = " #E74C3C";
+    flopCards.forEach((el) => {
+      el.classList.add("mesa-carta");
+      el.classList.remove("mesa-cartaPos");
+      btnCheck.style.opacity = 0;
+    });
+    flop = false;
+  }, 1000);
+}
+
+// =======================
+// Evento: Jogador aposta (BET)
+// =======================
+btnBet.addEventListener("click", async (event) => {
+  chipSound.play()
+  event.preventDefault();
+  // Jogador apostou, então não pode mais dar fold
+  foldOn = false;
+  foldTest();
+
+  // Ativa visual do botão Check
+  btnCheck.style.opacity = 1;
+
+  // Mostra cartas comunitárias viradas (flop)
+  flopCards.forEach((el) => {
+    el.classList.add("mesa-cartaPos");
+  });
+
+  // All in
+  if (currentChip == 0) {
     btnBet.disabled = true;
     btnCheck.disabled = true;
     btnFold.disabled = true;
     btnBet.style.backgroundColor = "gray";
     btnCheck.style.backgroundColor = "gray";
     btnFold.style.backgroundColor = "gray";
-  }
-
-  else if(move == 1){
+    
+  } else if (move == 1) {
+    console.log(move);
     flop = true;
-    loading.classList.add("cab4_active")
-    btnBet.disabled = true
-    btnCheck.disabled = true
-    btnFold.disabled = true
+    loading.classList.add("cab4_active");
+    btnBet.disabled = true;
+    btnCheck.disabled = true;
+    btnFold.disabled = true;
     setTimeout(async () => {
-    btnBet.disabled = false
-    btnCheck.disabled = false
-    btnFold.disabled = false
-    loading.classList.remove("cab4_active")
-    loading.classList.add("cab4")
-    await iaPlay()
-    console.log("Bet:",bet)
-    console.log("Check:",check)
-    console.log("Fold:",fold)
+      btnBet.disabled = false;
+      btnCheck.disabled = false;
+      btnFold.disabled = false;
+      loading.classList.remove("cab4_active");
+      loading.classList.add("cab4");
+      await iaPlay();
+      console.log("Call:", call);
+      console.log("Fold:", fold);
 
-    if(bet){
-      iaPlayFold()
-    }
-    else if(check){
-      iaPlayFold() //------------- iaPlayCheck() 
-    }
-    else if (fold){
-      iaPlayFold() //------------- iaPlayFold()
-    }
-    },1000)
+      if (call){
+        iaPlayCall();
+      } else if (fold) {
+        iaPlayFold();
+      }
 
-  }
+      ////////////////////////////////////////
+     /* if (bet) {
+        iaPlayBet();
+      } else if (check) {
+        iaPlayCheck();
+      } else if (fold) {
+        iaPlayFold();
+      } */ //-----------------------CASO JOGADOR APERTE CHECK!!!!!!!!
 
-  else if(move == 2){
-  // Solicita carta do turn ao servidor
-  const response = await fetch("/bet", { method: "POST" });
-  const data = await response.json();
+      //////////////////////////////////////////
+    }, 1000);
+    console.log(move);
+  } else if (move == 2) {
+    console.log(move);
+    // Solicita carta do turn ao servidor
+    const response = await fetch("/bet", { method: "POST" });
+    const data = await response.json();
 
-  // Se o servidor retornou carta do Turn, exibe na mesa
-  if (data.turn) {
-    const tableCards = document.getElementById("tableCardsEl");
+    // Se o servidor retornou carta do Turn, exibe na mesa
+    if (data.turn) {
+      const tableCards = document.getElementById("tableCardsEl");
 
-    // Verifica se já existe o turn-card
-    let turnCard = document.getElementById("turn-card");
+      // Verifica se já existe o turn-card
+      let turnCard = document.getElementById("turn-card");
 
-    // Se não existe, cria o elemento
-    if (!turnCard) {
-      turnCard = document.createElement("div");
-      turnCard.classList.add("mesa-carta");
-      turnCard.id = "turn-card";
-      tableCards.appendChild(turnCard);
-    }
+      // Se não existe, cria o elemento
+      if (!turnCard) {
+        turnCard = document.createElement("div");
+        turnCard.style.opacity = 1;
+        turnCard.classList.add("mesa-carta");
+        turnCard.id = "turn-card";
+        tableCards.appendChild(turnCard);
+      }
 
-    // Atualiza conteúdo da carta do turn
-    turnCard.innerHTML = `
+      // Atualiza conteúdo da carta do turn
+      turnCard.innerHTML = `
       <span class="value">${data.turn.value}</span>
       <span class="suit ${data.turn.color}">${data.turn.suit}</span>
     `;
-    turn()
+    }
+  } else if (move == 3) {
+    return;
   }
-}
-
-    
-  
 
   // (espaço para lógica do river ou showdown futuramente)
 
@@ -429,11 +534,17 @@ btnBet.addEventListener("click", async (event) => {
 });
 
 // =======================
+// Evento: Jogador passa (CHECK)
+// =======================
+
+async function checkPlay() {}
+
+// =======================
 // Evento: Jogador desiste (FOLD)
 // =======================
 
-async function foldPlay(){
-  
+async function foldPlay() {
+  foldSound.play()
   const response = await fetch("/fold", { method: "POST" });
   const data = await response.json();
 
@@ -452,7 +563,7 @@ async function foldPlay(){
   flopCard1.innerHTML = "";
   flopCard2.innerHTML = "";
   flopCard3.innerHTML = "";
-  
+
   // (precisa ainda exibir cartas da IA)
 
   // Renderiza carta 1 do jogador
@@ -471,7 +582,7 @@ async function foldPlay(){
                     <span class="suit ${card2.color}">${card2.suit}</span>`;
   playerCard2.appendChild(div2);
 
-  // Renderiza carta 1 do flop 
+  // Renderiza carta 1 do flop
   const flop1 = data.flop_cards[0];
   const div3 = document.createElement("div");
   div3.classList.add("tableCards");
@@ -479,7 +590,7 @@ async function foldPlay(){
                     <span class="suit ${flop1.color}">${flop1.suit}</span>`;
   flopCard1.appendChild(div3);
 
-  // Renderiza carta 2 do flop 
+  // Renderiza carta 2 do flop
   const flop2 = data.flop_cards[1];
   const div4 = document.createElement("div");
   div4.classList.add("tableCards");
@@ -487,7 +598,7 @@ async function foldPlay(){
                     <span class="suit ${flop2.color}">${flop2.suit}</span>`;
   flopCard2.appendChild(div4);
 
-  // Renderiza carta 3 do flop 
+  // Renderiza carta 3 do flop
   const flop3 = data.flop_cards[2];
   const div5 = document.createElement("div");
   div5.classList.add("tableCards");
@@ -495,23 +606,20 @@ async function foldPlay(){
                     <span class="suit ${flop3.color}">${flop3.suit}</span>`;
   flopCard3.appendChild(div5);
 
-
-  if(!flop){
+  if (!flop) {
     foldOn = true;
   }
   foldTest(); // desativa botão fold novamente
-
 }
 
 btnFold.addEventListener("click", async (event) => {
   event.preventDefault();
 
-  foldPlay()
-
+  foldPlay();
 });
 
-// =======================
-// Pré-flop, flop, turn e river (em desenvolvimento)
-// =======================
-// TODO: implementar lógica do flop, turn e river completos
+btnCheck.addEventListener("click", async (event) => {
+  event.preventDefault();
 
+  checkPlay();
+});
