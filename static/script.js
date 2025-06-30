@@ -358,10 +358,10 @@ btnBet.addEventListener("click", async (event) => {
       iaPlayBet()
     }
     else if(check){
-      iaPlayBet()
+      iaPlayBet() //------------- iaPlayCheck() ------
     }
     else if (fold){
-      iaPlayBet()
+      iaPlayBet() //------------- iaPlayFold()
     }
     },1000)
 
