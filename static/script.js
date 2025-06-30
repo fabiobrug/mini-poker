@@ -289,6 +289,30 @@ function iaPlayBet(){
   compChipQnt.innerHTML = currentCompChip;
 }
 
+function iaPlayCheck(){
+  return
+}
+
+function iaPlayFold(){
+    currentChip = potQnt + currentChip
+    chipQnt.innerHTML = currentChip;
+    btnCheck.style.opacity = 0;
+    btnCheck.innerHTML = "Check"
+    btnBet.innerHTML = "Bet"
+    pot.innerHTML = `Pot :`;
+    playerValue.innerHTML = `Player :`;
+    iaValue.innerHTML = `Computer :`;
+    betText.innerHTML = ""
+    btnFold.disabled = false;
+    btnFold.style.backgroundColor = " #E74C3C";
+    flopCards.forEach((el) => {
+    el.classList.add("mesa-carta");
+    el.classList.remove("mesa-cartaPos");
+    btnCheck.style.opacity = 0;
+    });
+    flop = false;
+}
+
 // =======================
 // Evento: Jogador aposta (BET)
 // =======================
@@ -355,13 +379,13 @@ btnBet.addEventListener("click", async (event) => {
     console.log("Fold:",fold)
 
     if(bet){
-      iaPlayBet()
+      iaPlayFold()
     }
     else if(check){
-      iaPlayBet() //------------- iaPlayCheck() ------
+      iaPlayFold() //------------- iaPlayCheck() 
     }
     else if (fold){
-      iaPlayBet() //------------- iaPlayFold()
+      iaPlayFold() //------------- iaPlayFold()
     }
     },1000)
 
