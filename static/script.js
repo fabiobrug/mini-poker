@@ -1,11 +1,10 @@
 // Mesa
 let tableEl = document.getElementById("tableEl");
 
-// Sons 
-let flipSound = new Audio("static/sounds/flipcard-91468.mp3")
-let foldSound = new Audio("static/sounds/carddrop2-92718.mp3")
-let chipSound = new Audio("static/sounds/allinpushchips-96121.mp3")
-
+// Sons
+let flipSound = new Audio("static/sounds/flipcard-91468.mp3");
+let foldSound = new Audio("static/sounds/carddrop2-92718.mp3");
+let chipSound = new Audio("static/sounds/allinpushchips-96121.mp3");
 
 // Botões principais de ação do jogador
 let btnBet = document.getElementById("btnBet");
@@ -82,9 +81,6 @@ function minValue() {
 
 // Desativa o botão de aumentar aposta quando chega no limite possível
 function maxValue() {
-  console.log(currentChip);
-  console.log(currentValue);
-
   let maxValue;
 
   maxValue = currentChip + currentValue;
@@ -126,9 +122,7 @@ plus.addEventListener("click", () => {
 function randomIaValue() {
   let choice;
 
-  const valueOptions65 = [
-    Math.floor(currentCompChip / 16)
-  ];
+  const valueOptions65 = [Math.floor(currentCompChip / 16)];
   const valueOptions20 = [
     Math.floor(currentCompChip / 8),
     Math.floor(currentCompChip / 4),
@@ -205,157 +199,149 @@ async function iaPlay() {
   const iaCard1 = data.ia_cards[0];
   const iaCard2 = data.ia_cards[1];
 
-  console.log("CARTA 1:", iaCard1, "CARTA 2:", iaCard2);
-
   //Para esse primeiro caso, mais para frente adicionar resposta da IA com base na quantidade de fichas apostadas pelo jogador tambem!!!
-  if(move==1){
+  if (move == 1) {
     if (iaCard1.value == iaCard2.value) {
-    const luck = Math.random();
+      const luck = Math.random();
 
-    if (luck < 0.6) {
-      call = true;
-    } else if (luck < 0.95) {
-      raise = true;
-    } else {
-      fold = true;
-    }
-  } else if (
-    ["A", "K", "Q", "J", "10"].includes(iaCard1.value) &&
-    ["A", "K", "Q", "J", "10"].includes(iaCard2.value)
-  ) {
-    const luck = Math.random();
+      if (luck < 0.6) {
+        call = true;
+      } else if (luck < 0.95) {
+        raise = true;
+      } else {
+        fold = true;
+      }
+    } else if (
+      ["A", "K", "Q", "J", "10"].includes(iaCard1.value) &&
+      ["A", "K", "Q", "J", "10"].includes(iaCard2.value)
+    ) {
+      const luck = Math.random();
 
-    if (luck < 0.6) {
-      call = true;
-    } else if (luck < 0.9) {
-      raise = true;
-    } else {
-      fold = true;
-    }
-  } else if (
-    (["A", "K", "Q", "J", "10"].includes(iaCard1.value) &&
-      ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard2.value)) ||
-    (["A", "K", "Q", "J", "10"].includes(iaCard2.value) &&
-      ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard1.value))
-  ) {
-    const luck = Math.random();
+      if (luck < 0.6) {
+        call = true;
+      } else if (luck < 0.9) {
+        raise = true;
+      } else {
+        fold = true;
+      }
+    } else if (
+      (["A", "K", "Q", "J", "10"].includes(iaCard1.value) &&
+        ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard2.value)) ||
+      (["A", "K", "Q", "J", "10"].includes(iaCard2.value) &&
+        ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard1.value))
+    ) {
+      const luck = Math.random();
 
-    if (luck < 0.5) {
-      call = true;
-    } else if (luck < 0.7) {
-      raise = true;
-    } else {
-      fold = true;
-    }
-  } else if (
-    ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard1.value) &&
-    ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard2.value)
-  ) {
-    const luck = Math.random();
+      if (luck < 0.5) {
+        call = true;
+      } else if (luck < 0.7) {
+        raise = true;
+      } else {
+        fold = true;
+      }
+    } else if (
+      ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard1.value) &&
+      ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard2.value)
+    ) {
+      const luck = Math.random();
 
-    if (luck < 0.2) {
-      call = true;
-    } else if (luck < 0.4) {
-      raise = true;
+      if (luck < 0.2) {
+        call = true;
+      } else if (luck < 0.4) {
+        raise = true;
+      } else {
+        fold = true;
+      }
     } else {
-      fold = true;
+      call = true;
     }
+
+    if (call) {
+      choice = "call";
+      return choice;
+    } else if (raise) {
+      choice = "raise";
+      return choice;
+    } else if (fold) {
+      choice = "fold";
+      return choice;
+    }
+
+    return choice;
   } else {
-    call = true;
-  }
-
-  if (call) {
-    choice = "call";
-    return choice;
-  } else if (raise) {
-    choice = "raise";
-    return choice;
-  } else if (fold) {
-    choice = "fold";
-    return choice;
-  }
-
-  return choice;
-  }
-
-
-  else{
     if (iaCard1.value == iaCard2.value) {
-    const luck = Math.random();
+      const luck = Math.random();
 
-    if (luck < 0.6) {
-      check = true;
-    } else if (luck < 0.95) {
-      bet = true;
+      if (luck < 0.6) {
+        check = true;
+      } else if (luck < 0.95) {
+        bet = true;
+      } else {
+        fold = true;
+      }
+    } else if (
+      ["A", "K", "Q", "J", "10"].includes(iaCard1.value) &&
+      ["A", "K", "Q", "J", "10"].includes(iaCard2.value)
+    ) {
+      const luck = Math.random();
+
+      if (luck < 0.6) {
+        check = true;
+      } else if (luck < 0.9) {
+        bet = true;
+      } else {
+        fold = true;
+      }
+    } else if (
+      (["A", "K", "Q", "J", "10"].includes(iaCard1.value) &&
+        ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard2.value)) ||
+      (["A", "K", "Q", "J", "10"].includes(iaCard2.value) &&
+        ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard1.value))
+    ) {
+      const luck = Math.random();
+
+      if (luck < 0.5) {
+        check = true;
+      } else if (luck < 0.7) {
+        bet = true;
+      } else {
+        fold = true;
+      }
+    } else if (
+      ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard1.value) &&
+      ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard2.value)
+    ) {
+      const luck = Math.random();
+
+      if (luck < 0.2) {
+        check = true;
+      } else if (luck < 0.4) {
+        bet = true;
+      } else {
+        fold = true;
+      }
     } else {
-      fold = true;
-    }
-  } else if (
-    ["A", "K", "Q", "J", "10"].includes(iaCard1.value) &&
-    ["A", "K", "Q", "J", "10"].includes(iaCard2.value)
-  ) {
-    const luck = Math.random();
-
-    if (luck < 0.6) {
       check = true;
-    } else if (luck < 0.9) {
-      bet = true;
-    } else {
-      fold = true;
     }
-  } else if (
-    (["A", "K", "Q", "J", "10"].includes(iaCard1.value) &&
-      ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard2.value)) ||
-    (["A", "K", "Q", "J", "10"].includes(iaCard2.value) &&
-      ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard1.value))
-  ) {
-    const luck = Math.random();
 
-    if (luck < 0.5) {
-      check = true;
-    } else if (luck < 0.7) {
-      bet = true;
-    } else {
-      fold = true;
+    if (bet) {
+      choice = "bet";
+      return choice;
+    } else if (fold) {
+      choice = "fold";
+      return choice;
+    } else if (check) {
+      choice = "check";
+      return choice;
     }
-  } else if (
-    ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard1.value) &&
-    ["9", "8", "7", "6", "5", "4", "3", "2"].includes(iaCard2.value)
-  ) {
-    const luck = Math.random();
 
-    if (luck < 0.2) {
-      check = true;
-    } else if (luck < 0.4) {
-      bet = true;
-    } else {
-      fold = true;
-    }
-  } else {
-    check = true;
-  }
-
-  if (bet) {
-    choice = "bet";
     return choice;
-  } else if (fold) {
-    choice = "fold";
-    return choice;
-  } else if (check) {
-    choice = "check";
-    return choice;
   }
-
-  return choice;
-  }
-  
 }
 
 function iaPlayBet() {
   // Calcula apostas e atualiza pot
   iaBet = randomIaValue();
-  console.log(compChipQnt);
-  console.log(iaBet);
   currentCompChip = currentCompChip - iaBet;
   compChipQnt.innerHTML = currentCompChip;
   potQnt = currentValue + iaBet;
@@ -370,7 +356,6 @@ function iaPlayBet() {
   currentValue = 20;
   value.innerHTML = currentValue;
   minValue();
-  console.log(iaBet);
 
   let call = iaBet - currentValue;
   iaValue.innerHTML = `Computer: ${iaBet}`;
@@ -386,62 +371,54 @@ function iaPlayBet() {
   move++;
 }
 
-function iaPlayRaise(){
+function iaPlayRaise() {
   iaBet = randomIaValue();
   betText.classList.add("cab4_active");
   betText.innerHTML = `Computer Raise to <strong>${iaBet}<strong>!`;
   tableEl.appendChild(betText);
 
-setTimeout(async () => {
-  chipSound.play()
-  console.log(iaBet)
-  console.log(currentValue)
-  if(iaBet > currentValue){
-  console.log(compChipQnt);
-  console.log(iaBet);
-  currentCompChip = currentCompChip - iaBet;
-  compChipQnt.innerHTML = currentCompChip;
-  console.log(iaBet)
-  console.log(currentValue)
-  potQnt = currentValue + iaBet;
-  console.log(potQnt);
-  //currentChip = currentChip - currentValue;
-  currentChip = currentChip - 20;
-  chipQnt.innerHTML = currentChip;
-  pot.innerHTML = `Pot: ${potQnt}`;
-  playerValue.innerHTML = `Player: ${currentValue}`;
-  iaValue.innerHTML = `Computer: ${iaBet}`;
+  setTimeout(async () => {
+    chipSound.play();
 
-  // Reinicia aposta mínima para próxima jogada
-  currentValue = 20;
-  value.innerHTML = currentValue;
-  minValue();
-  console.log(iaBet);
+    if (iaBet > currentValue) {
+      currentCompChip = currentCompChip - iaBet;
+      compChipQnt.innerHTML = currentCompChip;
 
-  let call = iaBet - currentValue;
-  btnCheck.innerHTML = `Call (${call})`;
-  btnBet.innerHTML = "Raise";
-  currentCompChip = currentCompChip;
-  compChipQnt.innerHTML = currentCompChip;
-  move++;
-  betText.style.opacity = 0
-  }
-  else{
-    iaPlayCall()
-  }
+      potQnt = currentValue + iaBet;
+      //currentChip = currentChip - currentValue;
+      currentChip = currentChip - 20;
+      chipQnt.innerHTML = currentChip;
+      pot.innerHTML = `Pot: ${potQnt}`;
+      playerValue.innerHTML = `Player: ${currentValue}`;
+      iaValue.innerHTML = `Computer: ${iaBet}`;
+
+      // Reinicia aposta mínima para próxima jogada
+      currentValue = 20;
+      value.innerHTML = currentValue;
+      minValue();
+
+      let call = iaBet - currentValue;
+      btnCheck.innerHTML = `Call (${call})`;
+      btnBet.innerHTML = "Raise";
+      currentCompChip = currentCompChip;
+      compChipQnt.innerHTML = currentCompChip;
+      move++;
+      betText.style.opacity = 0;
+    } else {
+      iaPlayCall();
+    }
   }, 1500);
-
 }
 
-function iaPlayCall(){
-  
+function iaPlayCall() {
   callText.classList.add("cab4_active");
-  callText.innerHTML = 'Computer Call!';
+  callText.innerHTML = "Computer Call!";
 
   tableEl.appendChild(callText);
+   
+       
   setTimeout(async () => {
-   chipSound.play()
-    console.log(callText)
+    chipSound.play();
     currentChip = currentChip - currentValue;
     currentCompChip = currentCompChip - currentValue;
     chipQnt.innerHTML = currentChip;
@@ -451,19 +428,23 @@ function iaPlayCall(){
     pot.innerHTML = `Pot: ${potQnt}`;
     playerValue.innerHTML = `Player: ${currentValue}`;
     iaValue.innerHTML = `Computer: ${currentValue}`;
-    callText.style.opacity = 0
+    callText.style.opacity = 0;
 
     flop = false;
+      setTimeout(async () =>{
+          flipSound.play()
+          turnMove();
+        }, 1000)
+        
   }, 1500);
-  
+
   move++;
   return;
-
 }
 
 function iaPlayCheck() {
   //--------------VAI PRECISAR SER REFORMULADO!!!!!!!!-------------
-  checkText.innerHTML = 'Computer Check!';
+  checkText.innerHTML = "Computer Check!";
   setTimeout(async () => {
     currentChip = currentChip - currentValue;
     currentCompChip = currentCompChip - currentValue;
@@ -482,13 +463,13 @@ function iaPlayCheck() {
 }
 
 function iaPlayFold() {
-  
+  foldText.style.opacity = 1;
   foldText.classList.add("cab4_active");
   foldText.innerHTML = `Computer Fold!`;
   tableEl.appendChild(foldText);
 
   setTimeout(async () => {
-    foldSound.play()
+    foldSound.play();
     currentChip = currentChip;
     chipQnt.innerHTML = currentChip;
     btnCheck.style.opacity = 0;
@@ -500,84 +481,17 @@ function iaPlayFold() {
     betText.innerHTML = "";
     btnFold.disabled = false;
     btnFold.style.backgroundColor = " #E74C3C";
+    foldText.style.opacity = 0;
     flopCards.forEach((el) => {
       el.classList.add("mesa-carta");
       el.classList.remove("mesa-cartaPos");
-      btnCheck.style.opacity = 0;
-      foldText.style.opacity = 0
     });
     flop = false;
   }, 1500);
 }
 
-// =======================
-// Evento: Jogador aposta (BET)
-// =======================
-btnBet.addEventListener("click", async (event) => {
-  chipSound.play()
-  event.preventDefault();
-  // Jogador apostou, então não pode mais dar fold
-  foldOn = false;
-  foldTest();
-
-  // Ativa visual do botão Check
-  btnCheck.style.opacity = 1;
-
-  // Mostra cartas comunitárias viradas (flop)
-  flopCards.forEach((el) => {
-    el.classList.add("mesa-cartaPos");
-  });
-
-  // All in
-  if (currentChip == 0) {
-    btnBet.disabled = true;
-    btnCheck.disabled = true;
-    btnFold.disabled = true;
-    btnBet.style.backgroundColor = "gray";
-    btnCheck.style.backgroundColor = "gray";
-    btnFold.style.backgroundColor = "gray";
-    
-  } else if (move == 1) {
-    console.log(move);
-    flop = true;
-    loading.classList.add("cab4_active");
-    btnBet.disabled = true;
-    btnCheck.disabled = true;
-    btnFold.disabled = true;
-    setTimeout(async () => {
-      btnBet.disabled = false;
-      btnCheck.disabled = false;
-      btnFold.disabled = false;
-      loading.classList.remove("cab4_active");
-      loading.classList.add("cab4");
-      await iaPlay();
-      console.log("Call:", call);
-      console.log("Raise:", raise);
-      console.log("Fold:", fold);
-
-      if (call){
-        iaPlayCall();
-      } else if(raise){
-        iaPlayRaise();
-      }else if (fold) {
-        iaPlayFold();
-      }
-
-      ////////////////////////////////////////
-     /* if (bet) {
-        iaPlayBet();
-      } else if (check) {
-        iaPlayCheck();
-      } else if (fold) {
-        iaPlayFold();
-      } */ //-----------------------CASO JOGADOR APERTE CHECK!!!!!!!!
-
-      //////////////////////////////////////////
-    }, 1000);
-    console.log(move);
-  } else if (move == 2) {
-    console.log(move);
-    // Solicita carta do turn ao servidor
+async function turnMove(){
+  // Solicita carta do turn ao servidor
     const response = await fetch("/bet", { method: "POST" });
     const data = await response.json();
 
@@ -603,13 +517,76 @@ btnBet.addEventListener("click", async (event) => {
       <span class="suit ${data.turn.color}">${data.turn.suit}</span>
     `;
     }
+}
+
+// =======================
+// Evento: Jogador aposta (BET)
+// =======================
+btnBet.addEventListener("click", async (event) => {
+  chipSound.play();
+  event.preventDefault();
+  // Jogador apostou, então não pode mais dar fold
+  foldOn = false;
+  foldTest();
+
+  // Ativa visual do botão Check
+  btnCheck.style.opacity = 1;
+
+  // Mostra cartas comunitárias viradas (flop)
+  flopCards.forEach((el) => {
+    el.classList.add("mesa-cartaPos");
+  });
+
+  // All in
+  if (currentChip == 0) {
+    btnBet.disabled = true;
+    btnCheck.disabled = true;
+    btnFold.disabled = true;
+    btnBet.style.backgroundColor = "gray";
+    btnCheck.style.backgroundColor = "gray";
+    btnFold.style.backgroundColor = "gray";
+  } else if (move == 1) {
+    flop = true;
+    loading.classList.add("cab4_active");
+    btnBet.disabled = true;
+    btnCheck.disabled = true;
+    btnFold.disabled = true;
+    setTimeout(async () => {
+      btnBet.disabled = false;
+      btnCheck.disabled = false;
+      btnFold.disabled = false;
+      loading.classList.remove("cab4_active");
+      loading.classList.add("cab4");
+      await iaPlay();
+
+      if (call) {
+        iaPlayCall();
+      } else if (raise) {
+        iaPlayRaise();
+      } else if (fold) {
+        iaPlayFold();
+        fold = false;
+      }
+
+      ////////////////////////////////////////
+      /* if (bet) {
+        iaPlayBet();
+      } else if (check) {
+        iaPlayCheck();
+      } else if (fold) {
+        iaPlayFold();
+      } */ //-----------------------CASO JOGADOR APERTE CHECK!!!!!!!!
+
+      //////////////////////////////////////////
+    }, 1000);
+  } else if (move == 2) {
+return
+    
   } else if (move == 3) {
     return;
   }
 
   // (espaço para lógica do river ou showdown futuramente)
-
-  console.log(potQnt); // depuração
 });
 
 // =======================
@@ -623,11 +600,9 @@ async function checkPlay() {}
 // =======================
 
 async function foldPlay() {
-  foldSound.play()
+  foldSound.play();
   const response = await fetch("/fold", { method: "POST" });
   const data = await response.json();
-
-  console.log(data.player_cards, data.ia_cards, data.flop_cards);
 
   // Seleciona elementos onde as cartas serão exibidas
   const playerCard1 = document.getElementById("card1El");
@@ -697,8 +672,22 @@ btnFold.addEventListener("click", async (event) => {
   foldPlay();
 });
 
+ 
+
+   
+
 btnCheck.addEventListener("click", async (event) => {
   event.preventDefault();
-
-  checkPlay();
-});
+    console.log("Bet:", bet);
+    console.log("Check:", check);
+    console.log("Call:", call);
+    console.log("Raise:", raise);
+    console.log("Fold:", fold);
+  checkPlay()
+   if (call) {
+      turnMove();
+   
+    }
+        
+   });
+      
