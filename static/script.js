@@ -15,6 +15,9 @@ let btnFold = document.getElementById("btnFold");
 // Exibir na tela
 let flopCards = document.querySelectorAll(".mesa-carta");
 let betText = document.createElement("h3");
+let checkText = document.createElement("h3");
+let callText = document.createElement("h3");
+let foldText = document.createElement("h3");
 
 // Exibição dos valores apostados
 let playerValue = document.getElementById("pla");
@@ -64,6 +67,7 @@ let check = false;
 let fold = false;
 let bet = false;
 let call = false;
+let raise = false;
 
 // =======================
 // Funções Auxiliares
@@ -123,8 +127,7 @@ function randomIaValue() {
   let choice;
 
   const valueOptions65 = [
-    Math.floor(currentCompChip / 32),
-    Math.floor(currentCompChip / 16),
+    Math.floor(currentCompChip / 16)
   ];
   const valueOptions20 = [
     Math.floor(currentCompChip / 8),
@@ -209,8 +212,10 @@ async function iaPlay() {
     if (iaCard1.value == iaCard2.value) {
     const luck = Math.random();
 
-    if (luck < 0.9) {
+    if (luck < 0.6) {
       call = true;
+    } else if (luck < 0.95) {
+      raise = true;
     } else {
       fold = true;
     }
@@ -220,8 +225,10 @@ async function iaPlay() {
   ) {
     const luck = Math.random();
 
-    if (luck < 0.9) {
+    if (luck < 0.6) {
       call = true;
+    } else if (luck < 0.9) {
+      raise = true;
     } else {
       fold = true;
     }
@@ -233,8 +240,10 @@ async function iaPlay() {
   ) {
     const luck = Math.random();
 
-    if (luck < 0.7) {
+    if (luck < 0.5) {
       call = true;
+    } else if (luck < 0.7) {
+      raise = true;
     } else {
       fold = true;
     }
@@ -244,8 +253,10 @@ async function iaPlay() {
   ) {
     const luck = Math.random();
 
-    if (luck < 0.5) {
+    if (luck < 0.2) {
       call = true;
+    } else if (luck < 0.4) {
+      raise = true;
     } else {
       fold = true;
     }
@@ -256,6 +267,9 @@ async function iaPlay() {
   if (call) {
     choice = "call";
     return choice;
+  } else if (raise) {
+    choice = "raise";
+    return choice;
   } else if (fold) {
     choice = "fold";
     return choice;
@@ -263,6 +277,7 @@ async function iaPlay() {
 
   return choice;
   }
+
 
   else{
     if (iaCard1.value == iaCard2.value) {
@@ -371,9 +386,62 @@ function iaPlayBet() {
   move++;
 }
 
+function iaPlayRaise(){
+  iaBet = randomIaValue();
+  betText.classList.add("cab4_active");
+  betText.innerHTML = `Computer Raise to <strong>${iaBet}<strong>!`;
+  tableEl.appendChild(betText);
+
+setTimeout(async () => {
+  chipSound.play()
+  console.log(iaBet)
+  console.log(currentValue)
+  if(iaBet > currentValue){
+  console.log(compChipQnt);
+  console.log(iaBet);
+  currentCompChip = currentCompChip - iaBet;
+  compChipQnt.innerHTML = currentCompChip;
+  console.log(iaBet)
+  console.log(currentValue)
+  potQnt = currentValue + iaBet;
+  console.log(potQnt);
+  //currentChip = currentChip - currentValue;
+  currentChip = currentChip - 20;
+  chipQnt.innerHTML = currentChip;
+  pot.innerHTML = `Pot: ${potQnt}`;
+  playerValue.innerHTML = `Player: ${currentValue}`;
+  iaValue.innerHTML = `Computer: ${iaBet}`;
+
+  // Reinicia aposta mínima para próxima jogada
+  currentValue = 20;
+  value.innerHTML = currentValue;
+  minValue();
+  console.log(iaBet);
+
+  let call = iaBet - currentValue;
+  btnCheck.innerHTML = `Call (${call})`;
+  btnBet.innerHTML = "Raise";
+  currentCompChip = currentCompChip;
+  compChipQnt.innerHTML = currentCompChip;
+  move++;
+  betText.style.opacity = 0
+  }
+  else{
+    iaPlayCall()
+  }
+  }, 1500);
+
+}
+
 function iaPlayCall(){
-betText.innerHTML = `Computer Call!`;
+  
+  callText.classList.add("cab4_active");
+  callText.innerHTML = 'Computer Call!';
+
+  tableEl.appendChild(callText);
   setTimeout(async () => {
+   chipSound.play()
+    console.log(callText)
     currentChip = currentChip - currentValue;
     currentCompChip = currentCompChip - currentValue;
     chipQnt.innerHTML = currentChip;
@@ -383,9 +451,11 @@ betText.innerHTML = `Computer Call!`;
     pot.innerHTML = `Pot: ${potQnt}`;
     playerValue.innerHTML = `Player: ${currentValue}`;
     iaValue.innerHTML = `Computer: ${currentValue}`;
+    callText.style.opacity = 0
 
     flop = false;
-  }, 1000);
+  }, 1500);
+  
   move++;
   return;
 
@@ -393,7 +463,7 @@ betText.innerHTML = `Computer Call!`;
 
 function iaPlayCheck() {
   //--------------VAI PRECISAR SER REFORMULADO!!!!!!!!-------------
-  betText.innerHTML = `Computer Check!`;
+  checkText.innerHTML = 'Computer Check!';
   setTimeout(async () => {
     currentChip = currentChip - currentValue;
     currentCompChip = currentCompChip - currentValue;
@@ -406,14 +476,19 @@ function iaPlayCheck() {
     iaValue.innerHTML = `Computer: ${currentValue}`;
 
     flop = false;
-  }, 1000);
+  }, 1500);
   move++;
   return;
 }
 
 function iaPlayFold() {
-  betText.innerHTML = `Computer Fold!`;
+  
+  foldText.classList.add("cab4_active");
+  foldText.innerHTML = `Computer Fold!`;
+  tableEl.appendChild(foldText);
+
   setTimeout(async () => {
+    foldSound.play()
     currentChip = currentChip;
     chipQnt.innerHTML = currentChip;
     btnCheck.style.opacity = 0;
@@ -429,9 +504,10 @@ function iaPlayFold() {
       el.classList.add("mesa-carta");
       el.classList.remove("mesa-cartaPos");
       btnCheck.style.opacity = 0;
+      foldText.style.opacity = 0
     });
     flop = false;
-  }, 1000);
+  }, 1500);
 }
 
 // =======================
@@ -476,11 +552,14 @@ btnBet.addEventListener("click", async (event) => {
       loading.classList.add("cab4");
       await iaPlay();
       console.log("Call:", call);
+      console.log("Raise:", raise);
       console.log("Fold:", fold);
 
       if (call){
         iaPlayCall();
-      } else if (fold) {
+      } else if(raise){
+        iaPlayRaise();
+      }else if (fold) {
         iaPlayFold();
       }
 
